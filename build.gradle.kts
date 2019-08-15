@@ -1,24 +1,30 @@
-plugins {
-    kotlin("jvm") version "1.3.41"
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = JavaVersion.VERSION_1_8.toString()
 }
 
-val junitVersion: String = "5.5.1"
+plugins {
+    kotlin("jvm") version "1.3.41"
+    id("com.adarshr.test-logger") version "1.7.0"
+}
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    testCompile("org.junit.jupiter:junit-jupiter-api:$junitVersion")
-    testCompile("org.junit.jupiter:junit-jupiter-params:$junitVersion")
-    testRuntime("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
+    implementation(kotlin("stdlib"))
+    implementation("io.rest-assured:rest-assured:4.0.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.9.9.3")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
+    testImplementation("org.testng:testng:6.14.3")
 }
 
 tasks.withType<Test> {
-    useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-        setExceptionFormat("full")
+    useTestNG()
+    testlogger {
+        showStandardStreams = true
+        showFullStackTraces = true
     }
 }
